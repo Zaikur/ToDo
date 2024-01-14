@@ -35,6 +35,18 @@ namespace ToDo.Controllers
             return View();
         }
 
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UploadEvents(List<EventModel> events)
+        {
+            // Process the received events and add them to Microsoft Calendar
+            return View("Success");
+        }
+
         [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
