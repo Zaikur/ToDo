@@ -20,7 +20,17 @@ namespace ToDo.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Help()
+        {
+            return View();
+        }
+
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        public IActionResult ViewList()
         {
             return View();
         }
