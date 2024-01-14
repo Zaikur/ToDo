@@ -61,10 +61,6 @@ function parseICS(contents) {
                     // Replace HTML entities like &nbsp;
                     description = description.replace(/&nbsp;/gi, ' ');
 
-
-
-
-
                     // Determine the type of event
                     let eventType = 'Unknown';
                     if (summary.startsWith('Class Session')) {
@@ -73,10 +69,13 @@ function parseICS(contents) {
                         eventType = 'Assignment';
                     }
 
+
+
                     // Separate each event into their own section for mass selection of types
-                    let eventHtml = `<div class="event ${eventType.toLowerCase()}">
+                    let eventHtml = `<div class="event ${eventType.toLowerCase()}" data-event-id="${uId}">
                             <label>
                                 <input type="checkbox" name="event" value="${summary}" class="event-checkbox ${eventType.toLowerCase()}-checkbox">
+                                <h4>${summary}</h4>
                                 <p>Start: ${startDate}</p>
                                 <p>End: ${endDate}</p>
                                 <p>Created: ${created}</p>
@@ -98,8 +97,7 @@ function parseICS(contents) {
             })
         }
     });
-    //Add button to submit calendar events to the calendar
-    displayHtml += '<button id="submitEvents">Add Selected Events to Calendar</button>'
+
     classSessionHtml += '</div>';
     assignmentHtml += '</div>';
     unknownHtml += '</div>';
@@ -110,7 +108,8 @@ function parseICS(contents) {
         classSessionHtml +
         '<button id="selectAllAssignments">Select All Assignments</button>' +
         '<button id="deselectAllAssignments">Deselect All Assignments</button>' +
-        assignmentHtml;
+        assignmentHtml +
+        '<button id="submitEvents">Add Selected Events to Calendar</button>';
 
     addListenersToEventButtons();
 }
@@ -137,9 +136,51 @@ function addListenersToEventButtons() {
     document.getElementById('deselectAllClassSessions').addEventListener('click', () => deselectAll('class-session'));
     document.getElementById('selectAllAssignments').addEventListener('click', () => selectAll('assignment'));
     document.getElementById('deselectAllAssignments').addEventListener('click', () => deselectAll('assignment'));
-    document.getElementById('selectAllUnknown').addEventListener('click', () => selectAll('unknown'));
-    document.getElementById('deselectAllUnknown').addEventListener('click', () => deselectAll('unknown'));
     document.getElementById('submitEvents').addEventListener('click', submitSelectedEvents);
 }
 
 
+//Handle sending selected events to the server for processing
+function submitSelectedEvents() {
+    const selectedEvents = [];
+    document.querySelectorAll('input[name="event"]:checked').forEach(checkbox => {
+        const eventId = checkbox.closest('.event').dataset.eventId;
+        const eventElement = document.querySelector(`.event[data-event-id="${eventId}"]`);
+
+        //Copy html from description so the <a> tag including link is also sent
+        const descriptionHtml = eventElement.querySelector('p:nth-of-type(7)').innerHTML;
+
+        const eventDetails = {
+            summary: eventElement.querySelector('h4').textContent,
+            startDate: eventElement.querySelector('p:nth-of-type(1)').textContent.replace('Start: ', ''),
+            endDate: eventElement.querySelector('p:nth-of-type(2)').textContent.replace('End: ', ''),
+            created: eventElement.querySelector('p:nth-of-type(3)').textContent.replace('Created: ', ''),
+            lastModified: eventElement.querySelector('p:nth-of-type(4)').textContent.replace('Last Modified: ', ''),
+            uId: eventId,
+            eventType: eventElement.querySelector('p:nth-of-type(6)').textContent.replace('Type: ', ''),
+            description: descriptionHtml
+        };
+        selectedEvents.push(eventDetails);
+    });
+    // Prepare data to be sent to the server
+    const data = JSON.stringify({ events: selectedEvents });
+
+
+    // AJAX request to send data to the server
+    fetch('/Calendar/UploadEvents', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+    },
+        body: data
+})
+.then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Handle success - maybe display a success message or redirect
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Handle errors here, such as displaying an error message
+    });
+}
