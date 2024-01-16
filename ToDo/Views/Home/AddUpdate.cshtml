@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = ViewBag.Action;
+}
+
+<form asp-action="Update" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+
+    <div class="form-group">
+        <label>Title: </label>
+        <input class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Date: </label>
+        <input class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Category: </label>
+        <input class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Description: </label>
+        <input class="form-control">
+    </div>
+    <p></p>
+
+    <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+    <a asp-action="List" class="btn btn-primary">Cancel</a>
+</form>

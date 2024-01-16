@@ -25,14 +25,18 @@ namespace ToDo.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Add()
         {
-            return View();
+            ViewBag.Action = "Add";
+            return View("AddUpdate");
         }
 
-        public IActionResult ViewList()
+        [HttpGet]
+        public IActionResult Update()
         {
-            return View();
+            ViewBag.Action = "Update";
+            return View("AddUpdate");
         }
 
         public IActionResult Import()
