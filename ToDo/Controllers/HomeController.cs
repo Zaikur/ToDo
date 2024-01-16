@@ -8,11 +8,11 @@ namespace ToDo.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        //private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
-        //    _logger = logger;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -28,6 +28,23 @@ namespace ToDo.Controllers
         public IActionResult Add()
         {
             return View();
+        }
+
+        public IActionResult ViewList()
+        {
+            return View();
+        }
+
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UploadEvents(List<EventModel> events)
+        {
+            // Process the received events and add them to Microsoft Calendar
+            return View("Success");
         }
 
         [AllowAnonymous]

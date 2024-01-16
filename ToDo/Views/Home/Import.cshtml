@@ -1,0 +1,20 @@
+﻿@*
+   Quinton Nelson
+   1/14/2024
+   Import allows the user to import a calendar from their STC calendar file. 
+   
+   To view file parsing logic go to fileUploadHandler.js
+*@
+@{
+    ViewData["Title"] = "Import";
+}
+
+<div class="file-upload-container" id="drop_zone">
+    <h1>Upload ICS File</h1>
+    <input type="file" id="file_input" accept=".ics">
+    <div id="dropArea">Drop file here!</div>
+    <script src="~/js/fileUploadHandler.js"></script>
+    <script src="~/js/parseICS.js"></script>
+</div>
+
+<div id="eventsDisplay"></div>
