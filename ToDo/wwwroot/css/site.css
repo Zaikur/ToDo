@@ -1,6 +1,7 @@
 /* Common styles for both modes */
 html {
     font-size: 14px;
+    position: relative;
 }
 
 @media (min-width: 768px) {
@@ -23,11 +24,98 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin: 0 0 100px;
 }
 
 /****************************************
-    Styles for file Import Box
+    Styles for todo events - Quinton Nelson
+****************************************/
+.submitContainer {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+}
+
+.event-group > h2 {
+    text-align: center;
+    margin: 1em;
+}
+
+.event-checkbox {
+    position: absolute;
+    left: -100vw;
+}
+
+.date-preview {
+    font-style: italic;
+}
+
+.event-heading {
+    font-size: 1.3em;
+    margin: .5em auto;
+}
+
+.event {
+    margin: 1em;
+    text-align: center;
+    padding: .5em;
+    border-radius: 5px 6px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transition: all .1s ease-in-out;
+    border-radius: 20px;
+    box-shadow: -28px -28px 55px #d9d9d9, 28px 28px 55px #ffffff;
+}
+
+.active {
+    border-radius: 19px;
+    border: 2px solid #87aa90;
+    box-shadow: -5px -5px 11px #87aa90, 5px 5px 11px #c3f4d0;
+}
+
+.date-preview {
+    margin: 1em;
+}
+
+.event:hover {
+    transform: scale(1.01);
+}
+
+.details-toggle {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+    background-color: #44c767;
+    border-radius: 8px;
+    border: 1px solid #18ab29;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 30px;
+    padding: 4px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #2f6627;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transition: .3s all;
+}
+
+.details-toggle:hover, .details-toggle:active {
+    background-color: #51ce3e;
+}
+
+.event-details {
+    text-align: center;
+    margin: 1.5em;
+    transition: .5s all ease-in-out;
+}
+
+.event-details > p {
+    font-size: 1.1em;
+}
+
+
+/****************************************
+    Styles for file Import Box - Quinton Nelson
 ****************************************/
 
 .file-upload-container {

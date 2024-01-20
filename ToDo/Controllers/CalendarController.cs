@@ -33,7 +33,7 @@ namespace ToDo.Controllers
             return result.AccessToken;
         }
 
-        //Get events from the webpage asdf
+        //Get events from the webpage
         [HttpPost("UploadEvents")]
         public IActionResult UploadEvents([FromBody] List<EventModel> events)
         {

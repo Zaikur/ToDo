@@ -1,9 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-//Ethan Niehus - this is file is needed in order to let the website for the light and dark mode to work
+﻿//Ethan Niehus - this is file is needed in order to let the website for the light and dark mode to work
 
 // Function to toggle between light and dark modes
 function toggleDarkMode() {
@@ -21,7 +16,3 @@ document.getElementById('toggleDarkModeButton').addEventListener('click', toggle
 // Check if a mode is stored in localStorage and apply it
 const savedMode = localStorage.getItem('mode');
 document.documentElement.classList.add(savedMode || 'light-mode');
-
-
-
-
