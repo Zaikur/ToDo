@@ -63,13 +63,12 @@ body {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     transition: all .1s ease-in-out;
     border-radius: 20px;
-    box-shadow: -28px -28px 55px #d9d9d9, 28px 28px 55px #ffffff;
+    border: 2px solid gray;
 }
 
 .active {
     border-radius: 19px;
-    border: 2px solid #87aa90;
-    box-shadow: -5px -5px 11px #87aa90, 5px 5px 11px #c3f4d0;
+    border: 3px solid #37DC07;
 }
 
 .date-preview {

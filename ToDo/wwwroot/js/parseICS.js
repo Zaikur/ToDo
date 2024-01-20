@@ -12,8 +12,8 @@
 function parseICS(contents) {
     const events = contents.split('BEGIN:VEVE');
     let eventObjects = [];
-    let classSessionHtml = '<div class="event-group col-md-6"><h2>Class Sessions</h2>' + '<button class="btn btn-primary" id="ToggleAllClassSessions">Select All Class Sessions</button>';
-    let assignmentHtml = '<div class="event-group col-md-6"><h2>Assignments</h2>' + '<button class="btn btn-primary" id="ToggleAllAssignments">Select All Assignments</button>';
+    let classSessionHtml = '<div class="event-group col-md-6"><h2>Class Sessions</h2>' + '<button class="btn btn-primary" id="ToggleAllClassSessions">Toggle Class Sessions</button>';
+    let assignmentHtml = '<div class="event-group col-md-6"><h2>Assignments</h2>' + '<button class="btn btn-primary" id="ToggleAllAssignments">Toggle Assignments</button>';
     let unknownHtml = '<div class="event-group"><h2>Unknown Events<h2>';
 
     events.forEach(eventRaw => {
@@ -21,6 +21,14 @@ function parseICS(contents) {
             //Parse event and add it to the array
             eventObjects.push(parseEvent(eventRaw));
         }
+    });
+
+    //Only show events that are in the future
+    const currentDate = new Date();
+
+    eventObjects = eventObjects.filter(obj => {
+        const eventDate = createDateObject(obj.startDate);
+        return eventDate >= currentDate;
     });
 
     // Sort events by start date
