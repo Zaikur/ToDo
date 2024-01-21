@@ -13,7 +13,7 @@ function submitSelectedEvents() {
     sendEventsToServer(rawEvents, false);
 }
 
-function sendEventsToServer(events, forceUpdate) {
+function sendEventsToServer(events, forceUpdate = false) {
     fetch('/Calendar/UploadEvents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -22,8 +22,10 @@ function sendEventsToServer(events, forceUpdate) {
         .then(response => response.json())
         .then(data => {
             if (data.actionRequired === "confirmUpdate") {
-                if (confirm("An event with this ID already exists. Do you want to update it?")) {
-                    sendEventsToServer(events, true); // Resend with forceUpdate set to true
+                if (confirm("One or more events with this ID already exists. Do you want to update it?")) {
+                    // Extract only the conflicting events from the original list
+                    const conflictingEvents = events.filter(event => data.conflictingEventIds.includes(event.uId));
+                    sendEventsToServer(conflictingEvents, true); // Resend with forceUpdate set to true
                 }
             } else {
                 handleResponse(data);
@@ -31,6 +33,7 @@ function sendEventsToServer(events, forceUpdate) {
         })
         .catch(handleError);
 }
+
 
 
 function handleResponse(data) {

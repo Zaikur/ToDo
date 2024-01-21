@@ -1,20 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
-using Microsoft.Net.Http.Headers;
-using System.Globalization;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using ToDo.Models;
-using static ToDo.Controllers.CalendarController;
 
 /*
  * Quinton Nelson
@@ -80,7 +69,8 @@ namespace ToDo.Controllers
                 return BadRequest();
             }
 
-            string currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(currentUserId)) return Forbid();
             if (eventItem.User != currentUserId)
             {
                 return Forbid();
@@ -117,8 +107,11 @@ namespace ToDo.Controllers
                 return NotFound();
             }
 
-            string currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (eventItem.User != currentUserId)
+            //Verify user is logged in
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+           
+            //Verify user matches event
+            if (eventItem.User != userId)
             {
                 return Forbid();
             }
@@ -138,8 +131,10 @@ namespace ToDo.Controllers
                 return BadRequest("Event data is required.");
             }
 
-            // Retrieve the user ID from the current user's claims
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //Verify user is logged in
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(userId)) return Forbid();
+
             eventModel.User = userId; // Set the User property to the current user's ID
 
             // Add new event
@@ -150,11 +145,12 @@ namespace ToDo.Controllers
         }
 
 
-
+        //This method returns true of an event already exists in the database
         private bool EventExists(int id)
         {
             return _context.Events.Any(e => e.Id == id);
         }
+
 
         //Get events from the webpage
         [HttpPost("UploadEvents")]
@@ -166,34 +162,29 @@ namespace ToDo.Controllers
                 return BadRequest("No event data received.");
             }
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(userId)) return Forbid();
 
-
+            List<string> conflictingEventIds = new List<string>();
             foreach (var rawEvent in eventData.Events)
             {
                 var eventModel = EventModel.ParseEventFromString(rawEvent);
                 eventModel.User = userId; // Set the User property to the current user's ID
                 var existingEvent = await FindExistingEvent(eventModel.UId);
 
-                if (existingEvent != null && !eventData.ForceUpdate)
+                if (existingEvent != null)
                 {
-                    return Json(new
+                    if (!eventData.ForceUpdate)
                     {
-                        success = false,
-                        message = "Event already exists.",
-                        existingEventId = existingEvent.Id,
-                        actionRequired = "confirmUpdate"
-                    });
-                }
-                else if (existingEvent != null)
-                {
-                    string currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    if (existingEvent.User != currentUserId)
-                    {
-                        return Forbid();
+                        conflictingEventIds.Add(existingEvent.UId);
+                        continue; // Add to conflict list and continue loop
                     }
-                    _context.Events.Update(existingEvent);
-                    await _context.SaveChangesAsync();
+                    else
+                    {
+                        // Update event details
+                        UpdateEventDetails(existingEvent, eventModel);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 else
                 {
@@ -202,8 +193,32 @@ namespace ToDo.Controllers
                 }
             }
 
+            if (conflictingEventIds.Any())
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Some events already exist.",
+                    conflictingEventIds = conflictingEventIds,
+                    actionRequired = "confirmUpdate"
+                });
+            }
+
             return Json(new { success = true, message = "Events processed successfully." });
         }
+
+        private void UpdateEventDetails(EventModel existingEvent, EventModel updatedEvent)
+        {
+            // Update the properties of the existing event with the new values
+            existingEvent.Summary = updatedEvent.Summary;
+            existingEvent.StartDate = updatedEvent.StartDate;
+            existingEvent.EndDate = updatedEvent.EndDate;
+            existingEvent.Description = updatedEvent.Description;
+            existingEvent.EventType = updatedEvent.EventType;
+            existingEvent.LastModified = DateTime.UtcNow;
+            _context.Events.Update(existingEvent);
+        }
+
 
         public class EventsModel
         {
