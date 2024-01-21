@@ -9,17 +9,22 @@ namespace ToDo.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly EventContext todo;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, EventContext context)
         {
             _logger = logger;
+
+            todo = context;
         }
 
         public IActionResult Index()
         {
+            var events = todo.Events
+                .OrderBy(e => e.StartDate).ToList();
 
-            return View();
+            return View(events);
         }
 
         public IActionResult Help()
