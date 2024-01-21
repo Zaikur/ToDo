@@ -2,10 +2,6 @@
  * Quinton Nelson
  * 1/14/2024
  * This file handles file input and file parsing for .ics calendar files
- * 
- * TODO: Add file error handling
- *       Check that file is .ics file
- *       Verify contents are as expected
  */
 
 document.getElementById('drop_zone').addEventListener('dragover', handleDragOver, false);
@@ -27,12 +23,30 @@ function handleFileSelect(evt) {
     // files is a FileList of File objects, use only the first one
     var file = files[0];
 
-    if (file) {
+    // Check if the file is an .ics file
+    if (file && isICSFile(file)) {
         var reader = new FileReader();
         reader.onload = function (e) {
             var contents = e.target.result;
             parseICS(contents);
+            hideDropZone();
         };
         reader.readAsText(file);
+    } else {
+        alert("Please upload a valid .ics file.");
+    }
+}
+
+function isICSFile(file) {
+    var fileName = file.name;
+    var fileExtension = fileName.split('.').pop().toLowerCase();
+    return fileExtension === 'ics';
+}
+
+//This method hides the dropZone after a successful upload
+function hideDropZone() {
+    var dropZone = document.getElementById('drop_zone');
+    if (dropZone) {
+        dropZone.style.display = 'none';
     }
 }
