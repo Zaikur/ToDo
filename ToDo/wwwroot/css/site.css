@@ -138,8 +138,8 @@ body {
 
 /* Dark mode */
 :root.dark-mode {
-    --background-color: #000; /* Dark mode background color */
-    --text-color: #fff; /* Dark mode text color */
+    --background-color: #858585; /* Dark mode background color */
+    --text-color: #fff /* Dark mode text color */
 }
 
 body {
