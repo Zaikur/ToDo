@@ -7,45 +7,54 @@
 
 // Handle sending selected events to the server for processing
 function submitSelectedEvents() {
-    const selectedEvents = [];
-    document.querySelectorAll('input[name="event"]:checked').forEach(checkbox => {
-        const eventId = checkbox.closest('.event').dataset.eventId;
-        const eventElement = document.querySelector(`.event[data-event-id="${eventId}"]`);
+    const selectedEvents = eventObjects.filter(obj => obj.selected);
+    const rawEvents = selectedEvents.map(obj => obj.eventRaw);
 
-        //Copy html from description so the <a> tag including link is also sent
-        const descriptionHtml = eventElement.querySelector('p:nth-of-type(7)').innerHTML;
+    sendEventsToServer(rawEvents, false);
+}
 
-        const eventDetails = {
-            summary: eventElement.querySelector('h4').textContent,
-            startDate: eventElement.querySelector('p:nth-of-type(1)').textContent.replace('Start: ', ''),
-            endDate: eventElement.querySelector('p:nth-of-type(2)').textContent.replace('End: ', ''),
-            created: eventElement.querySelector('p:nth-of-type(3)').textContent.replace('Created: ', ''),
-            lastModified: eventElement.querySelector('p:nth-of-type(4)').textContent.replace('Last Modified: ', ''),
-            uId: eventId,
-            eventType: eventElement.querySelector('p:nth-of-type(6)').textContent.replace('Type: ', ''),
-            description: descriptionHtml
-        };
-        selectedEvents.push(eventDetails);
-    });
-    // Prepare data to be sent to the server
-    const data = JSON.stringify({ events: selectedEvents });
-
-
-    // AJAX request to send data to the server
+function sendEventsToServer(events, forceUpdate) {
     fetch('/Calendar/UploadEvents', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: data
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ events: events, forceUpdate: forceUpdate })
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
-            // Handle success - maybe display a success message or redirect
+            if (data.actionRequired === "confirmUpdate") {
+                if (confirm("An event with this ID already exists. Do you want to update it?")) {
+                    sendEventsToServer(events, true); // Resend with forceUpdate set to true
+                }
+            } else {
+                handleResponse(data);
+            }
         })
-        .catch((error) => {
-            console.error('Error:', error);
-            // Handle errors here, such as displaying an error message
-        });
+        .catch(handleError);
+}
+
+
+function handleResponse(data) {
+    console.log('Response Data:', data); // Log the response data for debugging
+    if (data.success) {
+        alert("Success: " + (data.message || "Operation completed successfully"));
+        window.location.href = "/"; // Redirect to the homepage
+    } else {
+        alert("Error: " + (data.message || "Unknown error occurred"));
+    }
+}
+
+
+function handleError(error) {
+    console.error('Error:', error);
+
+    // Check if error object has 'message' property
+    let errorMessage = "An unknown error occurred.";
+    if (error && typeof error.message === 'string') {
+        errorMessage = error.message;
+    } else if (typeof error === 'string') {
+        // If error itself is a string, use it as the message
+        errorMessage = error;
+    }
+
+    alert(errorMessage);
 }

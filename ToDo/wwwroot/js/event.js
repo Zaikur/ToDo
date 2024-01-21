@@ -39,6 +39,10 @@ function parseEvent(eventRaw) {
     // Replace HTML entities like &nbsp;
     description = description.replace(/&nbsp;/gi, ' ');
 
+    //Append my.southeasttech.edu in front of <a> links so they work as expected
+    const linkRegex = /\/ICS\/[^\s"']+/g;
+    description = description.replace(linkRegex, match => 'https://my.southeasttech.edu' + match);
+
     // Determine the type of event
     let eventType = 'Unknown';
     if (summary.startsWith('Class Session')) {
@@ -56,7 +60,8 @@ function parseEvent(eventRaw) {
         uId: uId,
         description: description,
         eventType: eventType,
-        eventRaw: eventRaw
+        eventRaw: eventRaw,
+        selected: false
     };
 
     return event;

@@ -2,16 +2,14 @@
  * Quinton Nelson
  * 1/14/2024
  * This file parses the contents of the file and sorts them by category
- * 
- * TODO:style buttons
- *       sort events
  */
 
+
+let eventObjects = [];
 
 
 function parseICS(contents) {
     const events = contents.split('BEGIN:VEVE');
-    let eventObjects = [];
     let classSessionHtml = '<div class="event-group col-md-6"><h2>Class Sessions</h2>' + '<button class="btn btn-primary" id="ToggleAllClassSessions">Toggle Class Sessions</button>';
     let assignmentHtml = '<div class="event-group col-md-6"><h2>Assignments</h2>' + '<button class="btn btn-primary" id="ToggleAllAssignments">Toggle Assignments</button>';
     let unknownHtml = '<div class="event-group"><h2>Unknown Events<h2>';
@@ -79,24 +77,19 @@ function parseICS(contents) {
 
 
 // Functions to select/deselect all of a specific type
-function selectAll(eventType) {
+function toggleAll(eventType) {
     document.querySelectorAll(`.${eventType}-checkbox`).forEach(checkbox => {
         var uId = checkbox.id;
+        checkbox.checked = !checkbox.checked;
         toggleEventSelection(uId);
-    });
-}
-
-function deselectAll(eventType) {
-    document.querySelectorAll(`.${eventType}-checkbox`).forEach(checkbox => {
-        checkbox.checked = false;
     });
 }
 
 
 function addListenersToEventButtons() {
     // Event listeners for select/deselect buttons or links
-    document.getElementById('ToggleAllClassSessions').addEventListener('click', () => selectAll('class-session'));
-    document.getElementById('ToggleAllAssignments').addEventListener('click', () => selectAll('assignment'));
+    document.getElementById('ToggleAllClassSessions').addEventListener('click', () => toggleAll('class-session'));
+    document.getElementById('ToggleAllAssignments').addEventListener('click', () => toggleAll('assignment'));
     document.getElementById('submitEvents').addEventListener('click', submitSelectedEvents);
 }
 
@@ -108,29 +101,39 @@ function toggleEventDetails(uId) {
 
 //Select event checkbox
 function toggleEventSelection(uId) {
-    //Toggle checkbox
     var checkbox = document.getElementById(`${uId}`);
-    checkbox.checked = !checkbox.checked;
 
-    //Toggle class for styling
+    if (!checkbox) {
+        console.error('Checkbox not found for UID:', uId);
+        return;
+    }
+
+    // Use the checkbox's current state to set the class and the selected property
+    var isChecked = checkbox.checked;
+
     var currentElement = checkbox;
     while (currentElement && !currentElement.classList.contains('event')) {
         currentElement = currentElement.parentElement;
     }
 
     if (currentElement) {
-        console.log('Event element found', currentElement); // Debug log
-        if (checkbox.checked) {
-            console.log('Adding active class'); // Debug log
+        if (isChecked) {
             currentElement.classList.add('active');
         } else {
-            console.log('Removing active class'); // Debug log
             currentElement.classList.remove('active');
         }
     } else {
-        console.error('Event class parent not found for checkbox ID: checkboxUId-' + uId);
+        console.error('Event class parent not found for checkbox ID:', uId);
+    }
+
+    let eventObj = eventObjects.find(obj => obj.uId === uId);
+    if (eventObj) {
+        eventObj.selected = isChecked;
+    } else {
+        console.error('Event object not found for UID:', uId);
     }
 }
+
 
 function addSubmitEventsButton() {
     // Create a new button element
@@ -139,17 +142,11 @@ function addSubmitEventsButton() {
     button.className = "btn btn-primary";
     button.innerHTML = "Add Selected Events to Calendar"; // Set the button's text
 
-    // Optionally, add an event listener for the button
-    button.addEventListener("click", function () {
-        // Actions to perform when the button is clicked
-        console.log("Submit Events button clicked");
-    });
-
-    // Append the button to the footer
-    var footer = document.querySelector(".submitContainer"); // Use the appropriate selector for your footer
-    if (footer) {
-        footer.appendChild(button);
+    // Append the button to the floating div
+    var submitContainer = document.querySelector(".submitContainer");
+    if (submitContainer) {
+        submitContainer.appendChild(button);
     } else {
-        console.error("Footer not found");
+        console.error("submitContainer not found");
     }
 }
