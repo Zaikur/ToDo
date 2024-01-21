@@ -6,6 +6,7 @@
 //Ethan Niehus - this is file is needed in order to let the website for the light and dark mode to work
 
 // Function to toggle between light and dark modes
+
 function toggleDarkMode() {
     const htmlElement = document.documentElement;
     htmlElement.classList.toggle('dark-mode');
