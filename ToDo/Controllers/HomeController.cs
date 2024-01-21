@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ToDo.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToDo.Controllers
 {
@@ -17,6 +18,7 @@ namespace ToDo.Controllers
 
         public IActionResult Index()
         {
+
             return View();
         }
 

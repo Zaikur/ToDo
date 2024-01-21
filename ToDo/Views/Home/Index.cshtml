@@ -1,11 +1,59 @@
-﻿@{
+﻿@model List<EventModel>;
+@{
     ViewData["Title"] = "View List";
 }
 
 <div class="text-center">
     <h1 class="display-4">View To-Do List</h1>
-    <div class="list-group">
-        <a asp-controller="Home" asp-action="Add"
-           class="list-group-item">Add something to your To-Do List</a>
+    <div class="row">
+        <div class="col-sm-2">
+            <a asp-controller="Home" asp-action="Add"
+               class="list-group-item">Add an Event</a>
+            <form asp-action="Filter" method="post">
+                <div class="form-group">
+                    <label>Category:</label>
+                </div>
+                <div class="form-group">
+                    <label>Month:</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a asp-action="Index" asp-route-id="" class="btn btn-primary">Clear</a>
+            </form>
+        </div>
+        <div class="col-sm-10">
+            <table class="table table-bordered table-striped mt-2">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th class="w-25"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in Model)
+                    {
+                        <tr>
+                            <td>@task.Summary</td>
+                            <td>@task.StartDate.ToShortDateString()</td>
+                            <td>@task.EventType</td>
+                            <td>@task.Description</td>
+                            <td>
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm">
+                                    Update
+                                </button>
+
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
