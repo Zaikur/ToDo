@@ -1,16 +1,22 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using ToDo.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 // Add Authentication using Microsoft Identity Services
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
+    .EnableTokenAcquisitionToCallDownstreamApi(new string[] { "Calendars.ReadWrite" }) // Enable token acquisition
+    .AddInMemoryTokenCaches(); // Add a token cache
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -23,7 +29,11 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
 
+builder.Services.AddDbContext<EventContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EventContext")));
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -38,6 +48,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
