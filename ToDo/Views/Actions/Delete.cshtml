@@ -1,12 +1,9 @@
 ﻿@{
-    ViewBag.Title = "Delete Event";
+    ViewData["Title"] = "Delete Event";
     //<input type="hidden" asp-for="CategoryID" />
 }
 
-<h1>Confirm Deletion</h1>
-<h3>@Model.Name</h3>
-
-<form asp-action="Delete" method="post">
+<form asp-controller="Calendar" asp-action="DeleteEvent" method="post">
     <button type="submit" class="btn btn-primary">Delete</button>
     <a asp-action="Index" class="btn btn-primary">Cancel</a>
 </form>

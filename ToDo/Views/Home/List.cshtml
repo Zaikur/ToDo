@@ -7,7 +7,7 @@
     <h1 class="display-4">View To-Do List</h1>
     <div class="row">
         <div class="col-sm-2">
-            <a asp-controller="Home" asp-action="Add"
+            <a asp-controller="Actions" asp-action="Add"
                class="list-group-item">Add an Event</a>
             <form asp-action="Filter" method="post">
                 <div class="form-group">
@@ -40,15 +40,22 @@
                             <td>@task.EventType</td>
                             <td>@task.Description</td>
                             <td>
-                                <button type="submit"
-                                        class="btn btn-primary btn-sm">
-                                    Update
-                                </button>
 
-                                <button type="submit"
-                                        class="btn btn-primary btn-sm">
-                                    Delete
-                                </button>
+                                <form asp-controller="Actions" asp-action="Update" method="post">
+
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm">
+                                        Update
+                                    </button>
+                                </form>
+
+                                <form asp-controller="Actions" asp-action="Delete" method="post">
+
+                                    <button type="submit"
+                                            class="btn btn-primary btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }

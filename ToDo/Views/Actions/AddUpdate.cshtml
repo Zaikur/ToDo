@@ -1,0 +1,46 @@
+﻿@model EventModel;
+@{
+    ViewData["Title"] = ViewBag.Action + " Event";
+    //<input type="hidden" asp-for="CategoryID" />
+
+    if (ViewBag.Action = "Add")
+    {
+        ViewBag.Event = bool.Parse("AddEvent");
+    } else
+    {
+        ViewBag.Event = bool.Parse("UpdateEvent");
+    }
+}
+
+<form asp-controller="Calendar" asp-action="AddEvent" method="post">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Summary">Title: </label>
+        <input asp-for="Summary" class="form-control" />
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label asp-for="StartDate">Date: </label>
+        <input asp-for="StartDate" type="date" class="form-input" />
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label asp-for="EventType">Category: </label>
+        <select class="form-control" asp-for="EventType">
+            <option>Select Category</option>
+            <option>Assignmemnt</option>
+            <option>Classtime</option>
+        </select>
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label asp-for="Description">Description:</label>
+        <input type="text" asp-for="Description" class="form-control">
+    </div>
+    <p></p>
+
+    <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+    <a asp-action="Index" class="btn btn-primary">Cancel</a>
+</form>

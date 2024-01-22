@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ToDo.Models;
 using Microsoft.EntityFrameworkCore;
+using ToDoList.Models;
 
 namespace ToDo.Controllers
 {
@@ -24,8 +25,9 @@ namespace ToDo.Controllers
             return RedirectToAction("List");
         }
 
-        public IActionResult List()
+        public IActionResult List(string id)
         {
+
             var events = _context.Events
                 .OrderBy(e => e.StartDate)
                 .ToList();
@@ -38,18 +40,11 @@ namespace ToDo.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Add()
+        [HttpPost]
+        public IActionResult Filter(string[] filter)
         {
-            ViewBag.Action = "Add";
-            return View("AddUpdate");
-        }
-
-        [HttpGet]
-        public IActionResult Update()
-        {
-            ViewBag.Action = "Update";
-            return View("AddUpdate");
+            string id = string.Join('-', filter);
+            return RedirectToAction("Index", new { ID = id });
         }
 
         public IActionResult Import()
