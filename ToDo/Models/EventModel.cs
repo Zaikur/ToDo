@@ -1,11 +1,12 @@
 ﻿/* Quinton Nelson
  * 1/14/2024
- * This file used to create Event objects
+ * This file used to create Event objects, and parse data from received strings to populate the objects
  */
 
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ToDo.Models
@@ -26,6 +27,8 @@ namespace ToDo.Models
         {
             var eventModel = new EventModel();
             var lines = rawEvent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            StringBuilder descriptionBuilder = new StringBuilder();
+            bool isDescription = false;
 
             foreach (var line in lines)
             {
@@ -58,10 +61,24 @@ namespace ToDo.Models
                 {
                     eventModel.Description = line.Substring("DESCRIPTION:".Length);
                 }
-                else if (line.StartsWith(":"))
-                {
-                    eventModel.EventType = line.Substring("UID:".Length);
-                }
+
+                // Extract and clean the description
+                var descriptionMatch = Regex.Match(rawEvent, @"DESCRIPTION:([\s\S]*?)(?=\b[A-Z]+:)");
+                var description = descriptionMatch.Success ? descriptionMatch.Groups[1].Value.Trim() : "No description";
+
+                description = Regex.Replace(description, @"\\n|\\", "");
+                description = Regex.Replace(description, @"(\r\n|\n|\r)\s*", "");
+                description = Regex.Replace(description, @"<(?!a\s*\/?|\/a\s*)[^>]+>", "", RegexOptions.IgnoreCase);
+                description = Regex.Replace(description, @"(<a\s)", " $1", RegexOptions.IgnoreCase);
+                description = Regex.Replace(description, @"&nbsp;", " ");
+
+                //Prepend my.southeasttech.edu to <a> tags so links work correctly
+                var linkRegex = new Regex(@"/ICS/[^\s""']+");
+                description = linkRegex.Replace(description, match => "https://my.southeasttech.edu" + match.Value);
+
+                eventModel.Description = description;
+
+                eventModel.Description = description;
             }
             return eventModel;
         }
