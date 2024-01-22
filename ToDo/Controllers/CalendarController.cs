@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using ToDo.Models;
 
 /*
@@ -33,6 +34,50 @@ namespace ToDo.Controllers
             _context = context;
         }
 
+        //Server side file fetching because MyTech doesn't support CORS headers
+        [HttpGet("fetchICSFile")]
+        public async Task<IActionResult> FetchICSFile(string fileUrl)
+        {
+            if (!IsValidLink(fileUrl))
+            {
+                return BadRequest("Invalid URL.");
+            }
+
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    var response = await httpClient.GetAsync(fileUrl);
+                    response.EnsureSuccessStatusCode();
+                    string fileContents = await response.Content.ReadAsStringAsync();
+                    if (!IsValidICSFile(fileContents))
+                    {
+                        return BadRequest("The file is not a valid iCalendar file.");
+                    }
+                    return Ok(fileContents);
+                }
+                catch (HttpRequestException ex)
+                {
+                    // Handle errors (e.g., file not found, server error)
+                    return StatusCode(500, $"Error fetching file: {ex.Message}");
+                }
+            }
+        }
+
+        //This method checks that the link received is as expected, and did not change
+        private bool IsValidLink(string url)
+        {
+            return Regex.IsMatch(url, @"^https:\/\/my\.southeasttech\.edu\/ICS\/api\/ical\/[a-zA-Z0-9-]+$");
+        }
+
+
+        //This method checks that the file received is as expected
+        private bool IsValidICSFile(string fileContents)
+        {
+            return fileContents.StartsWith("BEGIN:VCALENDAR");
+        }
+
+
         public async Task<string> GetAccessToken()
         {
             try
@@ -45,105 +90,6 @@ namespace ToDo.Controllers
                 return "Error";
             }
         }
-
-        //GetEvent returns an event of given id
-        [HttpGet("GetEvent/{id}")]
-        public async Task<IActionResult> GetEvent(int id)
-        {
-            var eventItem = await _context.Events.FindAsync(id);
-            if (eventItem == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(eventItem);
-        }
-
-        //UpdateEvent updates an event of given id
-        [HttpPut("UpdateEvent/{id}")]
-        public async Task<IActionResult> UpdateEvent(int id, [FromBody] EventModel updatedEvent)
-        {
-            var eventItem = await _context.Events.FindAsync(id);
-            if (id != updatedEvent.Id)
-            {
-                return BadRequest();
-            }
-
-            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-            if (string.IsNullOrEmpty(currentUserId)) return Forbid();
-            if (eventItem.User != currentUserId)
-            {
-                return Forbid();
-            }
-
-            updatedEvent.LastModified = DateTime.UtcNow;
-            _context.Entry(updatedEvent).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EventExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
-        }
-
-        //This method deletes a single event by the given id
-        [HttpDelete("DeleteEvent/{id}")]
-        public async Task<IActionResult> DeleteEvent(int id)
-        {
-            var eventItem = await _context.Events.FindAsync(id);
-            if (eventItem == null)
-            {
-                return NotFound();
-            }
-
-            //Verify user is logged in
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-           
-            //Verify user matches event
-            if (eventItem.User != userId)
-            {
-                return Forbid();
-            }
-
-            _context.Events.Remove(eventItem);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        //This method adds a single event to the database
-        [HttpPost("AddEvent")]
-        public async Task<IActionResult> AddEvent([FromBody] EventModel eventModel)
-        {
-            if (eventModel == null)
-            {
-                return BadRequest("Event data is required.");
-            }
-
-            //Verify user is logged in
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-            if (string.IsNullOrEmpty(userId)) return Forbid();
-
-            eventModel.User = userId; // Set the User property to the current user's ID
-
-            // Add new event
-            _context.Events.Add(eventModel);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { success = true, message = "Event added successfully." });
-        }
-
 
         //This method returns true of an event already exists in the database
         private bool EventExists(int id)

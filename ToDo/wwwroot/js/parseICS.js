@@ -10,9 +10,6 @@ let eventObjects = [];
 
 function parseICS(contents) {
     const events = contents.split('BEGIN:VEVE');
-    let classSessionHtml = '<div class="event-group col-md-6"><h2>Class Sessions</h2>' + '<button class="btn btn-primary" id="ToggleAllClassSessions">Toggle Class Sessions</button>';
-    let assignmentHtml = '<div class="event-group col-md-6"><h2>Assignments</h2>' + '<button class="btn btn-primary" id="ToggleAllAssignments">Toggle Assignments</button>';
-    let unknownHtml = '<div class="event-group"><h2>Unknown Events<h2>';
 
     events.forEach(eventRaw => {
         if (eventRaw) {
@@ -35,44 +32,40 @@ function parseICS(contents) {
     });
 
 
-    eventObjects.forEach(obj => { 
-        // Separate each event into their own section for mass selection of types
-        let eventHtml =
-            `<div class="event ${obj.eventType.toLowerCase()}" onclick="toggleEventSelection('${obj.uId}')">
-                <span class="date-preview">${obj.startDate}</span>
-                <label class="row">
-                    <input type="checkbox" id="${obj.uId}" name="event" value="${obj.summary}" class="event-checkbox ${obj.eventType.toLowerCase()}-checkbox">
-                    <h4 class="col-md-8 event-heading">${obj.summary}</h4>
-                    <button class="details-toggle col-md-4" onclick="toggleEventDetails('${obj.uId}'); event.stopPropagation();">+</button>
-                </label>
-                <div class="event-details visually-hidden" id="details-${obj.uId}">
-                    <p><b>End Date:</b> ${obj.endDate}</p>
-                    <p><b>Last Modified:</b> ${obj.lastModified}</p>
-                    <p><b>UID:</b> ${obj.uId}</p>
-                    <p><b>Type:</b> ${obj.eventType}</p>
-                    <p><b>Description:</b> ${obj.description}</p>
-                </div>
-            </div>`;
+    eventObjects.forEach(obj => {
+        // Create a new div for each event
+        let eventDiv = document.createElement("div");
+        eventDiv.className = `event ${obj.eventType.toLowerCase()} fadeInUp`;
+        eventDiv.setAttribute('onclick', `toggleEventSelection('${obj.uId}')`);
+        eventDiv.innerHTML = `
+        <span class="date-preview">${obj.startDate}</span>
+        <label class="row">
+            <input type="checkbox" id="${obj.uId}" name="event" value="${obj.summary}" class="event-checkbox ${obj.eventType.toLowerCase()}-checkbox">
+            <h4 class="col-md-8 event-heading">${obj.summary}</h4>
+            <button class="details-toggle col-md-4" onclick="toggleEventDetails('${obj.uId}'); event.stopPropagation();">+</button>
+        </label>
+        <div class="event-details visually-hidden" id="details-${obj.uId}">
+            <p><b>End Date:</b> ${obj.endDate}</p>
+            <p><b>Last Modified:</b> ${obj.lastModified}</p>
+            <p><b>UID:</b> ${obj.uId}</p>
+            <p><b>Type:</b> ${obj.eventType}</p>
+            <p><b>Description:</b> ${obj.description}</p>
+        </div>
+    `;
 
+        // Append the div to the corresponding event group
         if (obj.eventType === 'Class-Session') {
-            classSessionHtml += eventHtml;
+            document.getElementById('classSessionContainer').appendChild(eventDiv);
         } else if (obj.eventType === 'Assignment') {
-            assignmentHtml += eventHtml;
+            document.getElementById('assignmentContainer').appendChild(eventDiv);
         } else if (obj.eventType === 'Unknown') {
-            unknownHtml += eventHtml;
+            document.getElementById('unknownContainer').appendChild(eventDiv);
         }
     });
 
-    classSessionHtml += '</div>';
-    assignmentHtml += '</div>';
-    unknownHtml += '</div>';
-
-    document.getElementById('eventsDisplay').innerHTML =
-        classSessionHtml +
-        assignmentHtml;
-
     addSubmitEventsButton();
     addListenersToEventButtons();
+
 }
 
 

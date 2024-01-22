@@ -38,7 +38,7 @@
                             <td>@task.Summary</td>
                             <td>@task.StartDate.ToShortDateString()</td>
                             <td>@task.EventType</td>
-                            <td>@task.Description</td>
+                            <td>@task.Description</td> @*Use @Html.Raw(task.Description) to keep links functional*@
                             <td>
 
                                 <form asp-controller="Actions" asp-action="Update" method="post">
