@@ -14,6 +14,12 @@ function submitSelectedEvents() {
 }
 
 function sendEventsToServer(events, forceUpdate) {
+    // Check if no events are selected
+    if (events.length === 0) {
+        alert("Please select at least one event to submit.");
+        return; // Stop the function execution here
+    }
+
     fetch('/Calendar/UploadEvents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using ToDo.Models;
 
 /*
@@ -32,6 +33,50 @@ namespace ToDo.Controllers
             _httpClientFactory = httpClientFactory;
             _context = context;
         }
+
+        //Server side file fetching because MyTech doesn't support CORS headers
+        [HttpGet("fetchICSFile")]
+        public async Task<IActionResult> FetchICSFile(string fileUrl)
+        {
+            if (!IsValidLink(fileUrl))
+            {
+                return BadRequest("Invalid URL.");
+            }
+
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    var response = await httpClient.GetAsync(fileUrl);
+                    response.EnsureSuccessStatusCode();
+                    string fileContents = await response.Content.ReadAsStringAsync();
+                    if (!IsValidICSFile(fileContents))
+                    {
+                        return BadRequest("The file is not a valid iCalendar file.");
+                    }
+                    return Ok(fileContents);
+                }
+                catch (HttpRequestException ex)
+                {
+                    // Handle errors (e.g., file not found, server error)
+                    return StatusCode(500, $"Error fetching file: {ex.Message}");
+                }
+            }
+        }
+
+        //This method checks that the link received is as expected, and did not change
+        private bool IsValidLink(string url)
+        {
+            return Regex.IsMatch(url, @"^https:\/\/my\.southeasttech\.edu\/ICS\/api\/ical\/[a-zA-Z0-9-]+$");
+        }
+
+
+        //This method checks that the file received is as expected
+        private bool IsValidICSFile(string fileContents)
+        {
+            return fileContents.StartsWith("BEGIN:VCALENDAR");
+        }
+
 
         public async Task<string> GetAccessToken()
         {

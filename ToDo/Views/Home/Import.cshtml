@@ -10,9 +10,16 @@
 }
 
 <div class="file-upload-container" id="drop_zone">
+    @*File upload, drag and drop or select file from system*@
     <h1>Upload ICS File</h1>
     <input type="file" id="file_input" accept=".ics">
     <div id="dropArea">Drop file here!</div>
+
+    <span class="fileUploadSep">OR</span>
+
+    @*OR past the link here to avoid downloading the file*@
+    <input type="text" id="ics_url" placeholder="Enter URL of the ICS file">
+    <button class="btn btn-primary" onclick="fetchICSFromUrl()">Fetch File</button>
     <script src="~/js/fileUploadHandler.js"></script>
     <script src="~/js/parseICS.js"></script>
     <script src="~/js/event.js"></script>
