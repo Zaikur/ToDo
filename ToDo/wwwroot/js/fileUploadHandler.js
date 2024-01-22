@@ -18,7 +18,7 @@ function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
-    toggleDropZoneLoading(true);
+    hideDropZone();
 
     var files = evt.target.files || evt.dataTransfer.files; // FileList object.
 
@@ -30,17 +30,13 @@ function handleFileSelect(evt) {
         var reader = new FileReader();
         reader.onload = function (e) {
             var contents = e.target.result;
-            setTimeout(() => {
-                parseICS(contents);
-                toggleDropZoneLoading(false);
-                hideDropZone();
-            }, 4000);
+            parseICS(contents);
+            hideDropZone();
         };
 
         reader.readAsText(file);
     } else {
         alert("Please upload a valid .ics file.");
-        toggleDropZoneLoading(false);
     }
 }
 
@@ -52,7 +48,7 @@ function fetchICSFromUrl() {
         alert("Please enter a valid link.");
         return;
     }
-    toggleDropZoneLoading(true);
+    hideDropZone();
 
     if (url) {
         fetch(`/Calendar/fetchICSFile?fileUrl=${encodeURIComponent(url)}`)
@@ -63,16 +59,12 @@ function fetchICSFromUrl() {
                 return response.text();
             })
             .then(data => {
-                setTimeout(() => {
-                    parseICS(data);
-                    toggleDropZoneLoading(false);
-                    hideDropZone();
-                }, 4000);
+                parseICS(data);
+                hideDropZone();
             })
             .catch(error => {
                 console.error('Fetch error:', error);
                 alert("Failed to fetch the file. Please check the URL.");
-                toggleDropZoneLoading(false);
             });
     } else {
         alert("Please enter a URL.");
@@ -95,25 +87,44 @@ function isICSFile(file) {
 //This method hides the dropZone after a successful upload
 function hideDropZone() {
     var dropZone = document.getElementById('drop_zone');
-    if (dropZone) {
-        dropZone.style.display = 'none';
+    var eventsDisplay = document.getElementById('eventsDisplay');
+
+    if (dropZone && eventsDisplay) {
+        // Remove the drop zone
+        dropZone.parentNode.removeChild(dropZone);
+
+        // Create the new containers and buttons
+        var classSessionContainer = document.createElement("div");
+        classSessionContainer.id = "classSessionContainer";
+        classSessionContainer.className = "event-group col-md-6";
+        classSessionContainer.innerHTML = '<h2>Class Sessions</h2>';
+
+        var toggleClassSessionsButton = document.createElement("button");
+        toggleClassSessionsButton.className = "btn btn-primary";
+        toggleClassSessionsButton.id = "ToggleAllClassSessions";
+        toggleClassSessionsButton.textContent = "Toggle Class Sessions";
+        classSessionContainer.appendChild(toggleClassSessionsButton);
+
+        var assignmentContainer = document.createElement("div");
+        assignmentContainer.id = "assignmentContainer";
+        assignmentContainer.className = "event-group col-md-6";
+        assignmentContainer.innerHTML = '<h2>Assignments</h2>';
+
+        var toggleAssignmentsButton = document.createElement("button");
+        toggleAssignmentsButton.className = "btn btn-primary";
+        toggleAssignmentsButton.id = "ToggleAllAssignments";
+        toggleAssignmentsButton.textContent = "Toggle Assignments";
+        assignmentContainer.appendChild(toggleAssignmentsButton);
+
+        var unknownContainer = document.createElement("div");
+        unknownContainer.id = "unknownContainer";
+        unknownContainer.className = "event-group";
+
+        // Append the new containers to the eventsDisplay div
+        eventsDisplay.appendChild(classSessionContainer);
+        eventsDisplay.appendChild(assignmentContainer);
+        eventsDisplay.appendChild(unknownContainer);
     }
 }
 
-//This method changes the drop zone to a loading bar while file is uploading/parsing
-function toggleDropZoneLoading(isLoading) {
-    var dropZone = document.getElementById('drop_zone');
-    if (dropZone) {
-        if (isLoading) {
-            dropZone.innerHTML =
-                '  <h1 class=loadingH1><em class="let1" > l</em ><em class="let2">o</em><em class="let3">a</em><em class="let4">d</em><em class="let5">i</em><em class="let6">n</em><em class="let7">g</em></h1>';
-        } else {
-            // Restore original drop zone content
-            dropZone.innerHTML = '<h1>Upload ICS File</h1>' +
-                '<input type="file" id="file_input" accept=".ics">' +
-                '<div id="dropArea">Drop file here!</div>';
-            // Reattach event listeners to new elements
-            document.getElementById('file_input').addEventListener('change', handleFileSelect, false);
-        }
-    }
-}
+
