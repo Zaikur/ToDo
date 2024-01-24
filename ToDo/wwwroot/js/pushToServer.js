@@ -5,14 +5,16 @@
  */
 
 
-// Handle sending selected events to the server for processing
+// Handle mapping of selected events
 function submitSelectedEvents() {
-    const selectedEvents = eventObjects.filter(obj => obj.selected);
+    const selectedEvents = eventObjects.filter(obj => obj.selected); //Map selected events to an array
     const rawEvents = selectedEvents.map(obj => obj.eventRaw);
 
     sendEventsToServer(rawEvents, false);
 }
 
+
+//This method sends data to the server
 function sendEventsToServer(events, forceUpdate) {
     // Check if no events are selected
     if (events.length === 0) {
@@ -20,13 +22,13 @@ function sendEventsToServer(events, forceUpdate) {
         return; // Stop the function execution here
     }
 
-    fetch('/Calendar/UploadEvents', {
+    fetch('/Calendar/UploadEvents', { //Async HTTP Post request at the /Calendar/UploadEvents endpoint containing events in JSON format
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ events: events, forceUpdate: forceUpdate })
     })
-        .then(response => response.json())
-        .then(data => {
+        .then(response => response.json())      //Parse the JSON response from the server
+        .then(data => {                         //Handle the response
             if (data.actionRequired === "confirmUpdate") {
                 if (confirm("Event with this ID already exists. Do you want to update it?")) {
                     sendEventsToServer(events, true); // Resend with forceUpdate set to true
@@ -40,7 +42,6 @@ function sendEventsToServer(events, forceUpdate) {
 
 
 function handleResponse(data) {
-    console.log('Response Data:', data); // Log the response data for debugging
     if (data.success) {
         alert("Success: " + (data.message || "Operation completed successfully"));
         window.location.href = "/"; // Redirect to the homepage
@@ -51,8 +52,6 @@ function handleResponse(data) {
 
 
 function handleError(error) {
-    console.error('Error:', error);
-
     // Check if error object has 'message' property
     let errorMessage = "An unknown error occurred.";
     if (error && typeof error.message === 'string') {

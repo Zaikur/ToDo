@@ -40,7 +40,7 @@ function handleFileSelect(evt) {
     }
 }
 
-//This method handles fetching the ics file from a given url
+//This method handles sending the link to the server to preform a Server-Side fetch of the file
 function fetchICSFromUrl() {
     var url = document.getElementById('ics_url').value;
 
