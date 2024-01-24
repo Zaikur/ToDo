@@ -84,7 +84,7 @@ function isICSFile(file) {
     return fileExtension === 'ics';
 }
 
-//This method hides the dropZone after a successful upload
+//This method hides the dropZone after a successful upload and creates containers for the respective event types
 function hideDropZone() {
     var dropZone = document.getElementById('drop_zone');
     var eventsDisplay = document.getElementById('eventsDisplay');

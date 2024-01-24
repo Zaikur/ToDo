@@ -5,7 +5,7 @@
    
    To view file upload logic go to fileUploadHandler.js
    To view file parsing logic go to parseICS.js
-   To view logic for communicating with the server go to pushToServer.js and CalendarController.cs respectively
+   To view logic for communicating between the server and client go to pushToServer.js and CalendarController.cs respectively
 *@
 @{
     ViewData["Title"] = "Import";
@@ -22,6 +22,8 @@
     @*OR past the link here to avoid downloading the file*@
     <input type="text" id="ics_url" placeholder="Enter URL of the ICS file">
     <button class="btn btn-primary" onclick="fetchICSFromUrl()">Fetch File</button>
+
+    @*Add javascript files used just for this page*@
     <script src="~/js/fileUploadHandler.js"></script>
     <script src="~/js/parseICS.js"></script>
     <script src="~/js/event.js"></script>
