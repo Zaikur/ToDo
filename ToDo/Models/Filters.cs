@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToDoList.Models
+namespace ToDo.Models
 {
     public class Filters
     {
