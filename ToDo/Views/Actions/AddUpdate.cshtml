@@ -2,17 +2,13 @@
 @{
     ViewData["Title"] = ViewBag.Action + " Event";
     //<input type="hidden" asp-for="CategoryID" />
-
-    if (ViewBag.Action = "Add")
-    {
-        ViewBag.Event = bool.Parse("AddEvent");
-    } else
-    {
-        ViewBag.Event = bool.Parse("UpdateEvent");
-    }
+    /*<select asp-for="EventType" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Categories, "EventType"))">
+            <option value=""></option>
+    </select>*/
 }
 
-<form asp-controller="Calendar" asp-action="AddEvent" method="post">
+<form asp-action="UpdateTask" method="post">
 
     <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -22,16 +18,20 @@
     </div>
     <p></p>
     <div class="form-group">
-        <label asp-for="StartDate">Date: </label>
+        <label asp-for="StartDate">Start Date: </label>
         <input asp-for="StartDate" type="date" class="form-input" />
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label asp-for="EndDate">End Date: </label>
+        <input asp-for="EndDate" type="date" class="form-input" />
     </div>
     <p></p>
     <div class="form-group">
         <label asp-for="EventType">Category: </label>
         <select class="form-control" asp-for="EventType">
-            <option>Select Category</option>
-            <option>Assignmemnt</option>
-            <option>Classtime</option>
+            <option>Assignment</option>
+            <option>Class-Session</option>
         </select>
     </div>
     <p></p>
@@ -41,6 +41,8 @@
     </div>
     <p></p>
 
+    <input type="hidden" asp-for="LastModified" value="@DateTime.Now"/>
+
     <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
-    <a asp-action="Index" class="btn btn-primary">Cancel</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Cancel</a>
 </form>

@@ -181,7 +181,7 @@ namespace ToDo.Controllers
 
 
         /***********************************************
-         ** CURRENTLY COMMENTED OUT PENDING APPROVAL ***
+         ********** CURRENTLY NOT CONNECTED ************
          ***********************************************
          
         private async Task<IActionResult> AddEventToCalendar(string rawEvent)
