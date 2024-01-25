@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ToDo.Models;
-using Microsoft.EntityFrameworkCore;
-using ToDoList.Models;
 
 namespace ToDo.Controllers
 {
