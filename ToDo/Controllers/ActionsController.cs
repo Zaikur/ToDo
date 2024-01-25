@@ -34,14 +34,18 @@ namespace ToDo.Controllers
         [HttpPost]
         public IActionResult UpdateTask(EventModel task)
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             if (ModelState.IsValid)
             {
                 if (task.Id == 0)
                 {
+                    if (string.IsNullOrEmpty(userId)) return Forbid();
+                    task.User = userId;
                     _context.Events.Add(task);
                 }
                 else
                 {
+                    if (userId != task.User) return Forbid();
                     _context.Events.Update(task);
                 }
                 _context.SaveChanges();
@@ -64,6 +68,8 @@ namespace ToDo.Controllers
         [HttpPost]
         public IActionResult DeleteTask(EventModel task)
         {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (userId != task.User) return Forbid();
             _context.Events.Remove(task);
             _context.SaveChanges();
             return RedirectToAction("List", "Home");

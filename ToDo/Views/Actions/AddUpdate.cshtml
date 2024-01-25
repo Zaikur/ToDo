@@ -6,11 +6,17 @@
                 asp-items="@(new SelectList(ViewBag.Categories, "EventType"))">
             <option value=""></option>
     </select>*/
+    //<input type="hidden" asp-for="User" value="@task.User" />//
 }
 
 <form asp-action="UpdateTask" method="post">
 
     <div asp-validation-summary="All" class="text-danger"></div>
+
+    @if (ViewBag.Action == "Update")
+    {
+        <input type="hidden" asp-for="User" />
+    }
 
     <div class="form-group">
         <label asp-for="Summary">Title: </label>
@@ -42,6 +48,13 @@
     <p></p>
 
     <input type="hidden" asp-for="LastModified" value="@DateTime.Now"/>
+    @if (ViewBag.Action == "Update") {
+        <input type="hidden" asp-for="Id" />
+    }
+    @if (ViewBag.Action == "Update")
+    {
+        <input type="hidden" asp-for="UId" />
+    }
 
     <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
     <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Cancel</a>
