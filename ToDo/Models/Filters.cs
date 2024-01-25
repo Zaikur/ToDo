@@ -33,5 +33,14 @@ namespace ToDoList.Models
                 { "november", "November" },
                 { "december", "December" }
             };
+
+        public static Dictionary<string, string> CategoryFilterValues =>
+            new Dictionary<string, string> {
+                { "classtime", "Classtime" },
+                { "assignment", "Assignment" }
+            };
+
+        public bool IsClasstime => Category.ToLower() == "classtime";
+        public bool IsAssignment => Category.ToLower() == "assignment";
     }
 }

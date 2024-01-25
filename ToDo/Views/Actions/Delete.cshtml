@@ -1,9 +1,14 @@
-﻿@{
+﻿@model EventModel
+@{
     ViewData["Title"] = "Delete Event";
     //<input type="hidden" asp-for="CategoryID" />
 }
 
-<form asp-controller="Calendar" asp-action="DeleteEvent" method="post">
+<h1>Confirm Deletion</h1>
+<h3>@Model.Summary</h3>
+
+<form asp-action="DeleteTask" method="post">
+    <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-primary">Delete</button>
-    <a asp-action="Index" class="btn btn-primary">Cancel</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Cancel</a>
 </form>

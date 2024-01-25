@@ -1,6 +1,12 @@
 ﻿@model List<EventModel>;
 @{
     ViewData["Title"] = "View List";
+    /*<select name="filter" class="form-control"
+    asp - items = "@(new SelectList(ViewBag.Categories, "EventType", ViewBag.Filters.Category))" >
+
+        < option value = "all" > All </ option >
+
+    </ select >*/
 }
 
 <div class="text-center">
@@ -9,9 +15,13 @@
         <div class="col-sm-2">
             <a asp-controller="Actions" asp-action="Add"
                class="list-group-item">Add an Event</a>
-            <form asp-action="Filter" method="post">
+            <form asp-controller="Home" asp-action="Filter" method="post">
                 <div class="form-group">
                     <label>Category:</label>
+                    <select name="filter" class="form-control"
+                            asp - items="@(new SelectList(ViewBag.Categories, "EventType", ViewBag.Filters.Category))">
+                        <option value = "all"> All </option >
+                    </select >
                 </div>
                 <div class="form-group">
                     <label>Month:</label>
@@ -28,36 +38,27 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th>Description</th>
-                        <th class="w-25"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var task in Model)
                     {
-                        <tr>
-                            <td>@task.Summary</td>
-                            <td>@task.StartDate.ToShortDateString()</td>
-                            <td>@task.EventType</td>
-                            <td>@task.Description</td> @*Use @Html.Raw(task.Description) to keep links functional*@
-                            <td>
-
-                                <form asp-controller="Actions" asp-action="Update" method="post">
-
-                                    <button type="submit"
-                                            class="btn btn-primary btn-sm">
-                                        Update
-                                    </button>
-                                </form>
-
-                                <form asp-controller="Actions" asp-action="Delete" method="post">
-
-                                    <button type="submit"
-                                            class="btn btn-primary btn-sm">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        if (task.EndDate > DateTime.Now) {
+                            <tr>
+                                <td>@task.Summary</td>
+                                <td>@task.StartDate.ToShortDateString()</td>
+                                <td>@task.EventType</td>
+                                <td>@Html.Raw(task.Description)</td> @*Use @Html.Raw(task.Description) to keep links functional*@
+                                <td>
+                                    <a asp-controller="Actions" asp-action="Update" class="btn btn-primary btn-sm" 
+                                        asp-route-id="@task.Id">Update</a>
+                                </td>
+                                <td>
+                                    <a asp-controller="Actions" asp-action="Delete" class="btn btn-primary btn-sm"
+                                       asp-route-id="@task.Id">Delete</a>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>

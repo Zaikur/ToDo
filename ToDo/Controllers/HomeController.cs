@@ -20,6 +20,13 @@ namespace ToDo.Controllers
             _context = ctx;
         }
 
+        [HttpPost]
+        public IActionResult Filter(string[] filter)
+        {
+            string id = string.Join('-', filter);
+            return RedirectToAction("List", new { ID = id });
+        }
+
         public IActionResult Index()
         {
             return RedirectToAction("List");
@@ -27,6 +34,10 @@ namespace ToDo.Controllers
 
         public IActionResult List(string id)
         {
+            var filters = new Filters(id);
+            ViewBag.Filters = filters;
+            ViewBag.Categories = Filters.CategoryFilterValues;
+            ViewBag.Months = Filters.MonthFilterValues;
 
             var events = _context.Events
                 .OrderBy(e => e.StartDate)
@@ -38,13 +49,6 @@ namespace ToDo.Controllers
         public IActionResult Help()
         {
             return View();
-        }
-
-        [HttpPost]
-        public IActionResult Filter(string[] filter)
-        {
-            string id = string.Join('-', filter);
-            return RedirectToAction("Index", new { ID = id });
         }
 
         public IActionResult Import()
