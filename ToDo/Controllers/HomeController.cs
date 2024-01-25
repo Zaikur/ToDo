@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ToDo.Models;
+using ToDoList.Models;
 
 namespace ToDo.Controllers
 {
@@ -22,7 +23,7 @@ namespace ToDo.Controllers
         public IActionResult Filter(string[] filter)
         {
             string id = string.Join('-', filter);
-            return RedirectToAction("List", new { ID = id });
+            return RedirectToAction("Index", new { ID = id });
         }
 
         public IActionResult Index()
