@@ -41,10 +41,9 @@
                             <td>@task.Description</td> @*Use @Html.Raw(task.Description) to keep links functional*@
                             <td>
 
+                                @**@
                                 <form asp-controller="Actions" asp-action="Update" method="post">
-
-                                    <button type="submit"
-                                            class="btn btn-primary btn-sm">
+                                    <button asp-controller="Actions" asp-action="Update" type="submit"class="btn btn-primary btn-sm">
                                         Update
                                     </button>
                                 </form>
