@@ -62,7 +62,7 @@ namespace ToDo.Models
                     eventModel.Description = line.Substring("DESCRIPTION:".Length);
                 }
 
-                // Extract and clean the description
+                // Extract and sanitize the description
                 var descriptionMatch = Regex.Match(rawEvent, @"DESCRIPTION:([\s\S]*?)(?=\b[A-Z]+:)");
                 var description = descriptionMatch.Success ? descriptionMatch.Groups[1].Value.Trim() : "No description";
 

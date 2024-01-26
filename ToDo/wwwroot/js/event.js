@@ -24,6 +24,7 @@ function parseEvent(eventRaw) {
     const descriptionMatch = eventRaw.match(/DESCRIPTION:([\s\S]*?)(?=\b[A-Z]+:)/);
     let description = descriptionMatch ? descriptionMatch[1].trim() : "No description";
 
+    //SANITIZE
     // Replace newline characters and backslashes
     description = description.replace(/\\n|\\/g, '');
 

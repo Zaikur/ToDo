@@ -18,8 +18,6 @@ function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
-    hideDropZone();
-
     var files = evt.target.files || evt.dataTransfer.files; // FileList object.
 
     // files is a FileList of File objects, use only the first one
@@ -48,7 +46,6 @@ function fetchICSFromUrl() {
         alert("Please enter a valid link.");
         return;
     }
-    hideDropZone();
 
     if (url) {
         fetch(`/Calendar/fetchICSFile?fileUrl=${encodeURIComponent(url)}`)
