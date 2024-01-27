@@ -4,9 +4,50 @@
  * This file handles file input and file parsing for .ics calendar files
  */
 
-document.getElementById('drop_zone').addEventListener('dragover', handleDragOver, false);
-document.getElementById('drop_zone').addEventListener('drop', handleFileSelect, false);
-document.getElementById('file_input').addEventListener('change', handleFileSelect, false);
+addListeners();
+var dragCounter = 0;
+
+function addListeners() {
+    document.getElementById('file_input').addEventListener('change', handleFileSelect, false);
+    document.getElementById('drop_zone').addEventListener('dragenter', handleDragEnter, false);
+    document.getElementById('drop_zone').addEventListener('dragleave', handleDragLeave, false);
+
+    // Attach event listener to drop_zone and all child elements so the drop effect triggers over the container
+    // and over the children
+    var dropZone = document.getElementById('drop_zone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+
+    Array.from(dropZone.querySelectorAll('*')).forEach(element => {
+        element.addEventListener('dragover', handleDragOver, false);
+        element.addEventListener('drop', handleFileSelect, false);
+    });
+}
+
+function handleDragEnter(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    dragCounter++;
+
+    // Add class to highlight or change style
+    // Use a counter so elements aren't rapidly changing when the mouse moves around
+    if (dragCounter === 1) {
+        evt.target.classList.add('drag-over');
+        document.querySelector('.file-upload-container').classList.add('file-drop-position');
+    }
+}
+
+function handleDragLeave(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    dragCounter--;
+
+    // Remove class when dragging leaves the area
+    if (dragCounter === 0) {
+        evt.target.classList.remove('drag-over');
+        document.querySelector('.file-upload-container').classList.remove('file-drop-position');
+    }
+}
 
 function handleDragOver(evt) {
     evt.stopPropagation();
@@ -20,6 +61,11 @@ function handleFileSelect(evt) {
 
     var files = evt.target.files || evt.dataTransfer.files; // FileList object.
 
+    if (!files.length) {
+        console.log("No file detected in drag.");
+        return; // Exit the function if no file is detected
+    }
+
     // files is a FileList of File objects, use only the first one
     var file = files[0];
 
@@ -28,13 +74,25 @@ function handleFileSelect(evt) {
         var reader = new FileReader();
         reader.onload = function (e) {
             var contents = e.target.result;
-            parseICS(contents);
-            hideDropZone();
+            console.log("File read successfully."); // Debugging log
+            if (isValidICS(contents)) {
+                hideDropZone();
+                parseICS(contents);
+            } else {
+                alert("Please upload a valid .ics file.");
+                addListeners();
+            }
         };
-
+        reader.onerror = function () {
+            console.error("Error reading file."); // Debugging log
+            alert("Error reading the file. Please try again.");
+            resetFileInput();
+        };
         reader.readAsText(file);
     } else {
+        console.error('ICS error:', error);
         alert("Please upload a valid .ics file.");
+        addListeners();
     }
 }
 
@@ -56,8 +114,8 @@ function fetchICSFromUrl() {
                 return response.text();
             })
             .then(data => {
-                parseICS(data);
                 hideDropZone();
+                parseICS(data);
             })
             .catch(error => {
                 console.error('Fetch error:', error);
@@ -65,6 +123,7 @@ function fetchICSFromUrl() {
             });
     } else {
         alert("Please enter a URL.");
+        addListeners();
     }
 }
 
@@ -79,6 +138,11 @@ function isICSFile(file) {
     var fileName = file.name;
     var fileExtension = fileName.split('.').pop().toLowerCase();
     return fileExtension === 'ics';
+}
+
+//This method checks that the file contents are as expected
+function isValidICS(contents) {
+    return contents.includes("BEGIN:VCALENDAR");
 }
 
 //This method hides the dropZone after a successful upload and creates containers for the respective event types
