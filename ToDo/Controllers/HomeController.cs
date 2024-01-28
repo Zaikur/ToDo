@@ -21,8 +21,9 @@ namespace ToDo.Controllers
         [HttpPost]
         public IActionResult Filter(string[] filter)
         {
+
             string id = string.Join('-', filter);
-            return RedirectToAction("Index", new { ID = id });
+            return RedirectToAction("List", new { ID = id });
         }
 
         public IActionResult Index()
@@ -37,7 +38,47 @@ namespace ToDo.Controllers
             ViewBag.Categories = Filters.CategoryFilterValues;
             ViewBag.Months = Filters.MonthFilterValues;
 
-            var events = _context.Events
+            IQueryable<EventModel> query = _context.Events;
+            if (filters.HasCategory)
+            {
+                if (filters.IsClassSession)
+                {
+                    query = query.Where(t => t.EventType == "Class-Session");
+                } else
+                {
+                    query = query.Where(t => t.EventType == filters.Category);
+                }
+            }
+            if (filters.HasMonth)
+            {
+                if (filters.IsJanuary)
+                    query = query.Where(u => u.StartDate.Month == 1);
+                else if (filters.IsFebruary)
+                    query = query.Where(u => u.StartDate.Month == 2);
+                else if (filters.IsMarch)
+                    query = query.Where(u => u.StartDate.Month == 3);
+                else if (filters.IsApril)
+                    query = query.Where(u => u.StartDate.Month == 4);
+                else if (filters.IsMay)
+                    query = query.Where(u => u.StartDate.Month == 5);
+                else if (filters.IsJune)
+                    query = query.Where(u => u.StartDate.Month == 6);
+                else if (filters.IsJuly)
+                    query = query.Where(u => u.StartDate.Month == 7);
+                else if (filters.IsAugust)
+                    query = query.Where(u => u.StartDate.Month == 8);
+                else if (filters.IsSeptember)
+                    query = query.Where(u => u.StartDate.Month == 9);
+                else if (filters.IsOctober)
+                    query = query.Where(u => u.StartDate.Month == 10);
+                else if (filters.IsNovember)
+                    query = query.Where(u => u.StartDate.Month == 11);
+                else if (filters.IsDecember)
+                    query = query.Where(u => u.StartDate.Month == 12);
+            }
+
+
+            var events = query
                 .OrderBy(e => e.StartDate)
                 .ToList();
 
