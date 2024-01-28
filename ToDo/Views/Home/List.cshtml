@@ -40,7 +40,8 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Date</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                         <th>Category</th>
                         <th>Description</th>
                     </tr>
@@ -52,6 +53,7 @@
                             <tr>
                                 <td>@task.Summary</td>
                                 <td>@task.StartDate.ToShortDateString()</td>
+                                <td>@task.EndDate.ToShortDateString()</td>
                                 <td>@task.EventType</td>
                                 <td>@Html.Raw(task.Description)</td> @*Use @Html.Raw(task.Description) to keep links functional*@
                                 <td>
