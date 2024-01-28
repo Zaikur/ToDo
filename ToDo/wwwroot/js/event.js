@@ -52,7 +52,7 @@ function parseEvent(eventRaw) {
         eventType = 'Assignment';
     }
 
-    //Create an event object and add it to the array
+    //Create an event object
     let event = {
         summary: summary,
         startDate: formatDateTime(startDate),

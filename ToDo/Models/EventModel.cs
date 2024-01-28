@@ -4,8 +4,6 @@
  */
 
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -82,6 +80,5 @@ namespace ToDo.Models
             }
             return eventModel;
         }
-
     }
 }
