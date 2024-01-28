@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <!-- Include Font Awesome link here -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+ 
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="~/js/site.js" asp-append-version="true"></script>
 </head>
@@ -38,7 +41,7 @@
                     <partial name="_LoginPartial" />
                     <!-- Modified dark mode toggle button with icon -->
                     <button id="toggleDarkModeButton" class="btn btn-primary">
-                        <i class="bi bi-brightness-high-fill" id="toggleDark"></i>
+                        <i id="darkModeIcon" class="bi"></i>
                     </button>
                 </div>
             </div>
@@ -57,8 +60,20 @@
             htmlElement.classList.toggle('dark-mode');
         }
 
+        function updateButtonIcon(isDarkMode) {
+            const iconElement = document.getElementById('darkModeIcon');
+            iconElement.className = isDarkMode ? 'bi bi-moon-fill' : 'bi bi-brightness-high-fill';
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('toggleDarkModeButton').addEventListener('click', toggleDarkMode);
+
+            const savedMode = localStorage.getItem('mode');
+            if (savedMode) {
+                const htmlElement = document.documentElement;
+                htmlElement.classList.add(savedMode);
+                updateButtonIcon(savedMode === 'dark-mode');
+            }
         });
     </script>
 

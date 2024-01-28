@@ -1,6 +1,4 @@
-﻿//Ethan Niehus - this is file is needed in order to let the website for the light and dark mode to work
-
-// Function to toggle between light and dark modes
+﻿// Function to toggle between light and dark modes
 function toggleDarkMode() {
     const htmlElement = document.documentElement;
     const isDarkMode = htmlElement.classList.toggle('dark-mode');
@@ -16,7 +14,9 @@ function toggleDarkMode() {
 // Function to update button icon based on the current mode
 function updateButtonIcon(isDarkMode) {
     const iconElement = document.getElementById('darkModeIcon');
-    iconElement.className = isDarkMode ? 'fas fa-moon' : 'fas fa-sun';
+
+    // Set the class directly based on the current mode
+    iconElement.className = isDarkMode ? 'bi bi-moon' : 'bi bi-brightness-high-fill';
 }
 
 // Event listener for the button to toggle dark mode
@@ -33,4 +33,3 @@ document.addEventListener('DOMContentLoaded', function () {
         updateButtonIcon(savedMode === 'dark-mode');
     }
 });
-
