@@ -177,3 +177,8 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
+
+/* Styles for moon icon in dark mode */
+.dark-mode #darkModeIcon {
+    color: #fff; /* Moon icon color in dark mode */
+}
