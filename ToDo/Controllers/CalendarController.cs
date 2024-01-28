@@ -183,17 +183,6 @@ namespace ToDo.Controllers
         /***********************************************
          ********** CURRENTLY NOT CONNECTED ************
          ***********************************************
-         
-        private async Task<IActionResult> AddEventToCalendar(string rawEvent)
-        {
-            var eventModel = ParseEventFromString(rawEvent);
-
-            // Add new event
-            _context.Events.Add(eventModel);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = "Events added successfully." });
-
-        }
 
         private async Task<bool> AddEventToCalendar(string rawEvent)
         {

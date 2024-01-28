@@ -56,6 +56,7 @@ body {
 }
 
 .event {
+    box-sizing: border-box;
     margin: 1em;
     text-align: center;
     padding: .5em;
@@ -73,10 +74,6 @@ body {
 
 .date-preview {
     margin: 1em;
-}
-
-.event:hover {
-    transform: scale(1.01);
 }
 
 .details-toggle {
@@ -98,9 +95,9 @@ body {
     transition: .3s all;
 }
 
-.details-toggle:hover, .details-toggle:active {
-    background-color: #51ce3e;
-}
+    .details-toggle:hover, .details-toggle:active {
+        background-color: #51ce3e;
+    }
 
 .event-details {
     text-align: center;
@@ -108,9 +105,9 @@ body {
     transition: .5s all ease-in-out;
 }
 
-.event-details > p {
-    font-size: 1.1em;
-}
+    .event-details > p {
+        font-size: 1.1em;
+    }
 
 /*Fade in containers*/
 @keyframes fadeInUp {
@@ -136,14 +133,19 @@ body {
 /****************************************
 Styles for file Import Box - Quinton Nelson
 ****************************************/
+.file-upload-container.file-drop-position {
+    border: 4px solid #64ff4c;
+}
 
 .file-upload-container {
-    border: 2px dashed #4CAF50;
+    border: 4px dashed #0b5ed7;
+    border-radius: 6px 7px;
     padding: 20px;
     text-align: center;
     cursor: pointer;
     max-width: 500px;
     margin: 0 auto;
+    transition: border .5s ease-in-out;
 }
 
 .file-input {
@@ -177,3 +179,30 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
+
+/* Styles for moon icon in dark mode */
+.dark-mode #darkModeIcon {
+    color: #fff; /* Moon icon color in dark mode */
+}
+
+/* Styles for star rating */
+.rating-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+    .rating-container input {
+        display: none;
+    }
+
+    .rating-container label {
+        font-size: 2em;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .rating-container input:checked ~ label {
+        color: #ffc107; /* Change this color to your desired highlight color */
+    }

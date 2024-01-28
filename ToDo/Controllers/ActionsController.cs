@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
-using System.Net.Http;
 using System.Security.Claims;
 using ToDo.Models;
 

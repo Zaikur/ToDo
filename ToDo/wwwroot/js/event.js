@@ -24,6 +24,7 @@ function parseEvent(eventRaw) {
     const descriptionMatch = eventRaw.match(/DESCRIPTION:([\s\S]*?)(?=\b[A-Z]+:)/);
     let description = descriptionMatch ? descriptionMatch[1].trim() : "No description";
 
+    //SANITIZE
     // Replace newline characters and backslashes
     description = description.replace(/\\n|\\/g, '');
 
@@ -51,7 +52,7 @@ function parseEvent(eventRaw) {
         eventType = 'Assignment';
     }
 
-    //Create an event object and add it to the array
+    //Create an event object
     let event = {
         summary: summary,
         startDate: formatDateTime(startDate),
