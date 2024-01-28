@@ -14,7 +14,6 @@ namespace ToDo.Controllers
         public HomeController(ILogger<HomeController> logger, EventContext ctx)
         {
             _logger = logger;
-
             _context = ctx;
         }
 
@@ -59,6 +58,17 @@ namespace ToDo.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult SubmitRating(int rating)
+        {
+            // Process the submitted rating (save it to the database, etc.)
+            // You can replace the following line with your actual logic
+            var resultMessage = $"Received rating: {rating}";
+
+            // Return a response, you can use JSON or a simple string
+            return Json(new { message = resultMessage });
         }
     }
 }

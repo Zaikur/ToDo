@@ -22,14 +22,27 @@ function updateButtonIcon(isDarkMode) {
 // Event listener for the button to toggle dark mode
 document.getElementById('toggleDarkModeButton').addEventListener('click', toggleDarkMode);
 
-// Check if a mode is stored in localStorage and apply it on page load
-document.addEventListener('DOMContentLoaded', function () {
-    const savedMode = localStorage.getItem('mode');
-    if (savedMode) {
-        const htmlElement = document.documentElement;
-        htmlElement.classList.add(savedMode);
+// Function to submit rating
+function submitRating() {
+    const rating = document.querySelector('input[name="rating"]:checked');
 
-        // Update button icon based on the saved mode
-        updateButtonIcon(savedMode === 'dark-mode');
+    if (!rating) {
+        alert('Please select a rating before submitting.');
+        return;
     }
-});
+
+    // Use AJAX to send the rating to the server
+    $.ajax({
+        url: '/Home/SubmitRating', // Specify your controller action URL
+        type: 'POST',
+        data: { rating: rating.value },
+        success: function (data) {
+            // Handle success, e.g., show a thank you message
+            alert('Thank you for your rating!');
+        },
+        error: function () {
+            // Handle error, if any
+            alert('Error submitting rating. Please try again.');
+        }
+    });
+}
