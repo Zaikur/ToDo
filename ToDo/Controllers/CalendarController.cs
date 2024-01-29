@@ -91,13 +91,6 @@ namespace ToDo.Controllers
             }
         }
 
-        //This method returns true of an event already exists in the database
-        private bool EventExists(int id)
-        {
-            return _context.Events.Any(e => e.Id == id);
-        }
-
-
         //Get events from the webpage
         [HttpPost("UploadEvents")]
         public async Task<IActionResult> UploadEventsAsync([FromBody] EventsModel eventData)
