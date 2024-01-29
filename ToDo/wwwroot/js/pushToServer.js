@@ -60,6 +60,5 @@ function handleError(error) {
         // If error itself is a string, use it as the message
         errorMessage = error;
     }
-
     alert(errorMessage);
 }

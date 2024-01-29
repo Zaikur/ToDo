@@ -19,13 +19,18 @@
                 <div class="form-group">
                     <label>Category:</label>
                     <select name="filter" class="form-control"
-                            asp - items="@(new SelectList(ViewBag.Categories, "EventType", ViewBag.Filters.Category))">
+                            asp-items="@(new SelectList(ViewBag.Categories, "Key", "Value", ViewBag.Filters.Category))">
                         <option value = "all"> All </option >
                     </select >
                 </div>
                 <div class="form-group">
                     <label>Month:</label>
+                    <select name="filter" class="form-control"
+                            asp-items="@(new SelectList(ViewBag.Months, "Key", "Value", ViewBag.Filters.Month))">
+                        <option value="all"> All </option>
+                    </select>
                 </div>
+                <p></p>
                 <button type="submit" class="btn btn-primary">Filter</button>
                 <a asp-action="Index" asp-route-id="" class="btn btn-primary">Clear</a>
             </form>
@@ -35,7 +40,8 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Date</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                         <th>Category</th>
                         <th>Description</th>
                     </tr>
@@ -47,6 +53,7 @@
                             <tr>
                                 <td>@task.Summary</td>
                                 <td>@task.StartDate.ToShortDateString()</td>
+                                <td>@task.EndDate.ToShortDateString()</td>
                                 <td>@task.EventType</td>
                                 <td>@Html.Raw(task.Description)</td> @*Use @Html.Raw(task.Description) to keep links functional*@
                                 <td>

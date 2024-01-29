@@ -65,7 +65,6 @@ function parseICS(contents) {
 
     addSubmitEventsButton();
     addListenersToEventButtons();
-
 }
 
 
@@ -93,11 +92,11 @@ function toggleEventDetails(uId) {
 }
 
 //Select event checkbox
+//Changes class on individual events when checked
 function toggleEventSelection(uId) {
     var checkbox = document.getElementById(`${uId}`);
 
     if (!checkbox) {
-        console.error('Checkbox not found for UID:', uId);
         return;
     }
 
@@ -116,14 +115,12 @@ function toggleEventSelection(uId) {
             currentElement.classList.remove('active');
         }
     } else {
-        console.error('Event class parent not found for checkbox ID:', uId);
     }
 
     let eventObj = eventObjects.find(obj => obj.uId === uId);
     if (eventObj) {
         eventObj.selected = isChecked;
     } else {
-        console.error('Event object not found for UID:', uId);
     }
 }
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace ToDo.Models
 {
     public class Filters
@@ -34,13 +33,28 @@ namespace ToDo.Models
                 { "december", "December" }
             };
 
+        public bool IsJanuary => Month.ToLower() == "january";
+        public bool IsFebruary => Month.ToLower() == "february";
+        public bool IsMarch => Month.ToLower() == "march";
+        public bool IsApril => Month.ToLower() == "april";
+        public bool IsMay => Month.ToLower() == "may";
+        public bool IsJune => Month.ToLower() == "june";
+        public bool IsJuly => Month.ToLower() == "july";
+        public bool IsAugust => Month.ToLower() == "august";
+        public bool IsSeptember => Month.ToLower() == "september";
+        public bool IsOctober => Month.ToLower() == "october";
+        public bool IsNovember => Month.ToLower() == "november";
+        public bool IsDecember => Month.ToLower() == "december";
+
+        public static int MonthNumber = 0;
+
         public static Dictionary<string, string> CategoryFilterValues =>
             new Dictionary<string, string> {
-                { "classtime", "Classtime" },
+                { "class", "Class" },
                 { "assignment", "Assignment" }
             };
 
-        public bool IsClasstime => Category.ToLower() == "classtime";
+        public bool IsClassSession => Category.ToLower() == "class";
         public bool IsAssignment => Category.ToLower() == "assignment";
     }
 }

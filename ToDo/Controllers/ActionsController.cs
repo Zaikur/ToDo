@@ -50,7 +50,7 @@ namespace ToDo.Controllers
             }
             else
             {
-                ViewBag.Action = "Save";
+                ViewBag.Action = "Error";
                 return View("AddUpdate");
             }
         }

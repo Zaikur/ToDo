@@ -3,6 +3,7 @@
  * This file used to create Event objects, and parse data from received strings to populate the objects
  */
 
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,14 +12,28 @@ namespace ToDo.Models
 {
     public class EventModel
     {
+        [Required(ErrorMessage = "For some reason you are missing an id.")]
         public int Id { get; set; }
+
         public string? User { get; set; }
+
+        [Required(ErrorMessage = "Please input a title.")]
         public string? Summary { get; set; }
+
+        [Required(ErrorMessage = "Please input a start date.")]
         public DateTime StartDate { get; set; }
+
+        [Required(ErrorMessage = "Please input an end date.")]
         public DateTime EndDate { get; set; }
+
         public DateTime LastModified { get; set; } = DateTime.UtcNow;
+
+
         public string? UId { get; set; }
+
         public string? Description { get; set; }
+
+        [Required(ErrorMessage = "Please input a Category.")]
         public string? EventType { get; set; }
 
         public static EventModel ParseEventFromString(string rawEvent)
