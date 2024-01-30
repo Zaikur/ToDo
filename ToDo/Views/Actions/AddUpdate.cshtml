@@ -1,17 +1,10 @@
 ﻿@model EventModel;
 @{
     ViewData["Title"] = ViewBag.Action + " Event";
-    //<input type="hidden" asp-for="CategoryID" />
-    /*<select asp-for="EventType" class="form-control"
-                asp-items="@(new SelectList(ViewBag.Categories, "EventType"))">
-            <option value=""></option>
-    </select>*/
-    //<input type="hidden" asp-for="User" value="@task.User" />//
+    //Aidan - Made this page
 }
 
 <form asp-action="UpdateTask" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-
     @if (ViewBag.Action == "Update")
     {
         <input type="hidden" asp-for="User" />

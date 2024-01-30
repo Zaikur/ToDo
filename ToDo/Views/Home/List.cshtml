@@ -1,12 +1,7 @@
 ﻿@model List<EventModel>;
 @{
     ViewData["Title"] = "View List";
-    /*<select name="filter" class="form-control"
-    asp - items = "@(new SelectList(ViewBag.Categories, "EventType", ViewBag.Filters.Category))" >
-
-        < option value = "all" > All </ option >
-
-    </ select >*/
+    //Aidan - Made this page.
 }
 
 <div class="text-center">
@@ -15,6 +10,7 @@
         <div class="col-sm-2">
             <a asp-controller="Actions" asp-action="Add"
                class="list-group-item">Add an Event</a>
+               @*The filter function gets the action from the home controller in order to get a query that finds out what is being filtered*@
             <form asp-controller="Home" asp-action="Filter" method="post">
                 <div class="form-group">
                     <label>Category:</label>
