@@ -1,4 +1,7 @@
-﻿@{
+﻿<!-- The entire help page Done by Ethan Niehus -->
+<!-- Just some good old html text -->
+
+@{
     ViewData["Title"] = "Help";
 }
 <h1>@ViewData["Title"]</h1>
@@ -144,14 +147,16 @@
 <br />
 <br />
 
-<p><h3>Hey what would you rate this page?</h3></p>
+<h3><p><center>Hey what would you rate this page?</center></p></h3>
 
 <br />
 <br />
 <br />
+
+<!-- Some code for the rating system that Done by Ethan Niehus -->
 
 <form id="ratingForm">
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    
     <div class="rating-container">
         <input type="radio" id="star5" name="rating" value="5" onmouseover="highlightStars(5)" />
         <label for="star5">&#9733;</label>
