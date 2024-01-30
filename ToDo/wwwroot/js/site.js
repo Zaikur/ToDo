@@ -38,7 +38,7 @@ function submitRating() {
         data: { rating: rating.value },
         success: function (data) {
             // Handle success, e.g., show a thank you message
-            alert('Thank you for your rating!');
+            alert('Thank you for your rating our website!');
         },
         error: function () {
             // Handle error, if any
@@ -46,3 +46,29 @@ function submitRating() {
         }
     });
 }
+
+function highlightStars(starCount) {
+    const stars = document.querySelectorAll('.rating-container label');
+
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].classList.remove('active');
+        if (i < starCount) {
+            stars[i].classList.add('active');
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.querySelectorAll('.rating-container label');
+
+    stars.forEach(function (star, index) {
+        star.addEventListener('mouseover', function () {
+            highlightStars(index + 1);
+        });
+
+        star.addEventListener('click', function () {
+            // Toggle the 'active' class on click
+            star.classList.toggle('active');
+        });
+    });
+});

@@ -74,7 +74,6 @@ function handleFileSelect(evt) {
         var reader = new FileReader();
         reader.onload = function (e) {
             var contents = e.target.result;
-            console.log("File read successfully."); // Debugging log
             if (isValidICS(contents)) {
                 hideDropZone();
                 parseICS(contents);
@@ -84,13 +83,11 @@ function handleFileSelect(evt) {
             }
         };
         reader.onerror = function () {
-            console.error("Error reading file."); // Debugging log
             alert("Error reading the file. Please try again.");
             resetFileInput();
         };
         reader.readAsText(file);
     } else {
-        console.error('ICS error:', error);
         alert("Please upload a valid .ics file.");
         addListeners();
     }

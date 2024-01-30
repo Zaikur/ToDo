@@ -161,7 +161,9 @@ Styles for file Import Box - Quinton Nelson
     padding: 1em;
 }
 
-
+/****************************************
+Styles for file Light/Dark Mode - Ethan Niehus
+****************************************/
 Resources
 /* Light mode */
 :root:not(.dark-mode) {
@@ -185,24 +187,58 @@ body {
     color: #fff; /* Moon icon color in dark mode */
 }
 
-/* Styles for star rating */
+/****************************************************
+Styles for file help page for the stars - Ethan Niehus
+*****************************************************/
+
+
 .rating-container {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    margin-top: 10px; /* Adjust as needed */
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
-    .rating-container input {
-        display: none;
-    }
+.rating-container label {
+ font-size: 24px;
+ cursor: pointer;
+ margin: 0 5px;
+ color: #777; /* Star color */
+ }
 
-    .rating-container label {
-        font-size: 2em;
-        color: #ccc;
-        cursor: pointer;
-    }
+.rating-container input[type="radio"] {
+display: none;
+}
 
-    .rating-container input:checked ~ label {
-        color: #ffc107; /* Change this color to your desired highlight color */
-    }
+.rating-container label:hover {
+color: #ffcc00; /* Hover color for the hovered star */
+}
+
+.rating-container label.active {
+color: #ffcc00; /* Active color for selected stars */
+}
+
+.rating-container label.active ~ label:hover {
+color: #777; /* Reset hover color for stars to the right */
+}
+
+#submitBtn:hover {
+    background-color: #27ae60; /* Darker green hover color */
+}
+
+#submitBtn:disabled {
+    background-color: #dddddd; /* Disabled button color */
+    cursor: not-allowed;
+}
+
+#submitBtn {
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: #2ecc71; /* Green background color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto; /* Center the button horizontally */
+
+}
