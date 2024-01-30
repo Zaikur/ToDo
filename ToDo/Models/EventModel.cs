@@ -3,6 +3,8 @@
  * This file used to create Event objects, and parse data from received strings to populate the objects
  */
 
+//Aidan - Made the error messages
+
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;

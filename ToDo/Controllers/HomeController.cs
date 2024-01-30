@@ -1,3 +1,5 @@
+//Aidan - Made this page
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -17,10 +19,11 @@ namespace ToDo.Controllers
             _context = ctx;
         }
 
+        //Gets the filter to find out what, if anything, is being queried.
         [HttpPost]
         public IActionResult Filter(string[] filter)
         {
-
+            
             string id = string.Join('-', filter);
             return RedirectToAction("List", new { ID = id });
         }
@@ -32,11 +35,13 @@ namespace ToDo.Controllers
 
         public IActionResult List(string id)
         {
+            //Gets the filter values
             var filters = new Filters(id);
             ViewBag.Filters = filters;
             ViewBag.Categories = Filters.CategoryFilterValues;
             ViewBag.Months = Filters.MonthFilterValues;
 
+            //Gets a query of the list and then checks if anything is being queried
             IQueryable<EventModel> query = _context.Events;
             if (filters.HasCategory)
             {
@@ -76,7 +81,7 @@ namespace ToDo.Controllers
                     query = query.Where(u => u.StartDate.Month == 12);
             }
 
-
+            //Returns the query
             var events = query
                 .OrderBy(e => e.StartDate)
                 .ToList();

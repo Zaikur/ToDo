@@ -11,7 +11,7 @@ using ToDo.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-// Add Authentication using Microsoft Identity Services
+// Add Authentication using Microsoft Identity Services - Quinton Nelson
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
     .EnableTokenAcquisitionToCallDownstreamApi(new string[] { "Calendars.ReadWrite" }) // Enable token acquisition
