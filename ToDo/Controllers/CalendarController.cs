@@ -34,7 +34,7 @@ namespace ToDo.Controllers
             _context = context;
         }
 
-        //Server side file fetching because MyTech doesn't support CORS headers
+        //Server side file fetching used to bypass CORS and same-origin policy restrictions
         [HttpGet("fetchICSFile")]
         public async Task<IActionResult> FetchICSFile(string fileUrl)
         {
