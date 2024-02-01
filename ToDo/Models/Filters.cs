@@ -49,8 +49,6 @@ namespace ToDo.Models
         public bool IsNovember => Month.ToLower() == "november";
         public bool IsDecember => Month.ToLower() == "december";
 
-        public static int MonthNumber = 0;
-
         //Contains all the values for category
         public static Dictionary<string, string> CategoryFilterValues =>
             new Dictionary<string, string> {
