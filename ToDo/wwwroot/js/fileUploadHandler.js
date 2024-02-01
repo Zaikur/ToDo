@@ -24,6 +24,7 @@ function addListeners() {
     });
 }
 
+//The next two methods handle behavoir of a file being dragged into or out of the drop-zone
 function handleDragEnter(evt) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -55,6 +56,7 @@ function handleDragOver(evt) {
     evt.dataTransfer.dropEffect = 'copy'; // show this is a copy.
 }
 
+//This method handles selection and loading of a file from the user's computer
 function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();

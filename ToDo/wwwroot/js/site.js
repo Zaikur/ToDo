@@ -1,4 +1,8 @@
-﻿// Function to toggle between light and dark modes
+﻿/****************************************
+Java coding for Light/Dark Mode - Ethan Niehus
+****************************************/
+
+// Function to toggle between light and dark modes
 function toggleDarkMode() {
     const htmlElement = document.documentElement;
     const isDarkMode = htmlElement.classList.toggle('dark-mode');
@@ -21,6 +25,10 @@ function updateButtonIcon(isDarkMode) {
 
 // Event listener for the button to toggle dark mode
 document.getElementById('toggleDarkModeButton').addEventListener('click', toggleDarkMode);
+
+/****************************************
+Java coding for file Rating function - Ethan Niehus
+****************************************/
 
 // Function to submit rating
 function submitRating() {
@@ -46,6 +54,10 @@ function submitRating() {
         }
     });
 }
+
+/********************************************************
+Java Coding for hover mode over the stats - Ethan Niehus
+*********************************************************/
 
 function highlightStars(starCount) {
     const stars = document.querySelectorAll('.rating-container label');
