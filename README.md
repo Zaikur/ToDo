@@ -23,5 +23,5 @@ To set up and run the project locally, follow these steps:
 3. Configure the `appsettings.json` with your environment-specific settings.
 4. Run the application:
 
-## Contributors
+## Acknowledgements
 Quinton Nelson, HiImEthan, and KGAidan
